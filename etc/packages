@@ -1,0 +1,3 @@
+
+rpm -qa | grep '^python'
+rpm -ql python

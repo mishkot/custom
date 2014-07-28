@@ -1,0 +1,31 @@
+"	Global settings.
+"
+set autoindent
+set noshowmatch
+set wrapscan
+set tabstop=4
+set directory=~/tmp
+"
+"	Store and read a number of lines in a temporary file.
+"	To save ten lines use as:
+"	:.,+9 wT
+"
+ab wT w! ~/tmp/vi_temp_save
+ab rT r  ~/tmp/vi_temp_save
+"
+"	Map arrow keys to allow cursor movement while in edit mode. Left, Right, Up, Down.
+"map! OD ha
+"map! OC la
+"map! OA ka
+"map! OB ja
+"
+"	Map ^A/^S to move cursor to the beginning/end of the line in edit mode.
+"map!  0i
+"map!  A
+"
+"	Map ^X to comment out a line like /* ... */ in command mode
+"	Map ^Y to undo that.
+"
+"map  0i/* A */^
+"map  :s/\/\* \([^*]*\) \*\//\1
+"

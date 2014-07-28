@@ -1,0 +1,10 @@
+# ln -s .custom/_bash_profile ~/.bash_profile
+# this file ~/.bash_profile is invoked automatically by a login shell
+#echo "Executing .custom/_bash_profile (~/.bash_profile)"
+
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+	. ~/.bashrc
+fi
+
+# User specific environment and startup programs

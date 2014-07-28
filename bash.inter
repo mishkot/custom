@@ -1,0 +1,123 @@
+# MK's personal interactive bash start-up script
+
+# declare -f (function_name)  - list function definitions
+# declare -F (function_name)  - list function names
+# unset -f function_name  - unset a function
+# 2> redirect error
+# >& redirect output and error
+# 2>&1 redirect error to output
+# >| overrides noclobber
+
+
+# ALIASES ########################################################## {{{
+  alias h=history
+
+  # terminal window and icon titles (see /etc/bashrc for xterm, screen)
+  if [ "${TERM}" = "xterm" ] ; then
+    PROMPT_COMMAND=                                     # unset
+    function wlab { echo -ne '\033]2;'"$*"'\007' ; }    # window title
+    function ilab { echo -ne '\033]1;'"$*"'\007' ; }    # icon
+    function tlab { echo -ne '\033]0;'"$*"'\007' ; }    # both
+  elif [ "${TERM}" = "screen" ] ; then
+    PROMPT_COMMAND=                                     # unset
+    function wlab { echo -ne '\033_'"$*"'\033\\' ; }    # window title
+    function ilab { echo -ne '\033]1;'"$*"'\007' ; }    # icon
+    function tlab { wlab $*; ilab $*; }                 # both
+  else
+    echo "unknown term"
+    function wlab { return 0; }
+    function ilab { return 0; }
+    function tlab { return 0; }
+  fi
+
+  #function xyz { echo $0 ++ $1 ++ $2 ; echo $#; echo $FUNCNAME; }
+
+  function wlabreset { wlab "${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/~}"; }
+  function wilabreset { wlabreset; ilab "${HOSTNAME%%.*}"; }
+
+  function ccall {  if [ "$3" != "" ] ; then ilab $3; fi;
+                    wlab "$1 $2"; command $1 $2; wilabreset; }
+
+  function cd       {  if [ "$*" != "" ] ; then command cd "$@"; else command cd; fi;
+                                                                        wlabreset; }
+  function pushd    {  if [ "$*" != "" ] ; then command pushd $*; else command pushd; fi;
+                                                                        wlabreset; }
+  function popd     { command $FUNCNAME ; wlabreset; }
+  function rlogin   { ccall $FUNCNAME "$*" "r:$*"; }
+  function rsh      { ccall $FUNCNAME "$*" "r:$*"; }
+  function ssh      { ccall $FUNCNAME "$*" "r:$*"; }
+  function man      { ccall $FUNCNAME "$*" "m:$*"; }
+  function more     { ccall $FUNCNAME "$*" "m:$*"; }
+
+
+  # aliases for ls commands
+  alias l='\ls -1F'                         # 1 entry/line, mark dir-s with a slash
+  alias ll='\ls -F'                         # mark dir-s with a slash
+  alias l.='\ls -1AF'                       # -a, but `.' and `..' are not listed
+  alias ll.='\ls -AF'
+  alias lls='\ls -l'
+  alias lls.='\ls -Al'
+  alias lc='\ls *.c *.cc 2>/dev/null'
+  alias lh='\ls *.h 2>/dev/null'
+  alias lch='\ls *.h *.c *.cc 2>/dev/null'
+  alias lt='\ls *.tcl *.tk 2>/dev/null'
+  alias lpy='\ls *.py 2>/dev/null'
+
+  # aliases for code grep and find/grep commands
+  alias g=grep
+  function gc { grep "$@" *.c *.cc 2>/dev/null; }
+  function gh { grep "$@" *.h 2>/dev/null; }
+  function gch { grep "$@" *.h *.c *.cc 2>/dev/null; }
+  function gt { grep "$@" *.tcl *.tk 2>/dev/null; }
+  function gp { grep "$@" *.py 2>/dev/null; }
+
+  function fgs { find . -name '*.h' -or -name '*.c' -or -name '*.cc' | xargs grep "$@"; }
+  function fgc { find . -name '*.c' -or -name '*.cc' | xargs grep "$@"; }
+  function fgh { find . -name '*.h' | xargs grep "$@"; }
+  function fgm { find . -name RCS -prune -or -name '*.mk' -or -name 'Makefile*' | xargs grep "$@"; }
+  function fgpy { find . -name '*.py'  | xargs grep "$@"; }
+
+# [ -f ~/.custom/alias.sccs ] && . ~/.custom/alias.sccs
+
+  # rcs aliases
+  alias .cii='ci -i -u -t-"."'      # ci initial: -i - initial checkin, -u - checkout
+  alias .ciu='ci -j -u -m"."'       # ci existing: -j - no create, -u - checkout unlocked
+  alias .col='co -l'                # co locked
+
+  function led() { find -name '*,v' | grep -v arc_src | while read fp; do d=${fp%/RCS/*}; f=$(basename $fp); f=$d/${f%,v}; [[ -w $f ]] && echo $f; done; }
+  function ned() { find -name '*,v' | grep -v arc_src | while read fp; do d=${fp%/RCS/*}; f=$(basename $fp); f=$d/${f%,v}; [[ -w $f ]] || echo $f; done; }
+
+  # misceanous aliaces
+  alias p=pwd
+  alias c=cat
+  alias m=more
+  alias h=history
+  alias a=alias
+  alias u=unalias
+  alias ag='alias | grep'
+  alias gf='declare -F | grep'
+  alias .f='find . -name'
+
+  alias kl='kill -KILL'
+  alias eg='env | grep'
+  function pg { ps -A -opid,user,stime,command | egrep "($*)|(PID)" | grep -v 'egrep.*PID'; }
+  function pgl { ps -A -opid,user,stime,%cpu,cputime,rss,vsz,command | egrep "($*)|(PID)" | grep -v 'egrep.*PID'; }
+
+  alias diff='diff -t'          # expand TAB characters in output lines
+  alias cdif='diff -tw'         # ignore all blanks (' ' & TAB)
+  alias difc='diff -twc'        # ignore all blanks (' ' & TAB), expanded output
+
+  alias gv='gvim -geom 90x30 2>/dev/null'   # 'vim -g -geom 90x30', suppress complaints
+
+  alias .c='. ~/.bashrc'        # re-source start-up scripts
+#}}}
+
+
+# COMMANDS #########################################################
+export PS1=": \u@\h \!; "        # prompt: user name, host name, history number
+
+wilabreset                      # set window/icon labels
+
+set -o vi
+
+export FIGNORE='.o:.d:~'

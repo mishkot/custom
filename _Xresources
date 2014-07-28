@@ -1,0 +1,33 @@
+! File : .Xresources
+! Mike K, Feb 4,2007
+! To reload .Xresources after making changes run
+!	xrdb -merge ~/.Xresources
+
+! xterm
+! Default
+xterm*font: -*-courier-bold-r-normal-*-14-*-*-*-*-*-*-*
+! Unreadable
+xterm*font1: -*-*-*-*-*-*-2-*-*-*-*-*-*-*
+! Tiny
+xterm*font2: -*-courier-bold-r-normal-*-8-*-*-*-*-*-*-*
+! Small
+xterm*font3: -*-courier-bold-r-normal-*-10-*-*-*-*-*-*-*
+! Medium
+xterm*font4: -*-courier-bold-r-normal-*-18-*-*-*-*-*-*-*
+! Large
+xterm*font5: -*-courier-bold-r-normal-*-24-*-*-*-*-*-*-*
+! Huge
+xterm*font6: -*-courier-bold-r-normal-*-34-*-*-*-*-*-*-*
+
+XTerm*background: white
+XTerm*foreground: black
+XTerm*pointerColor: red
+XTerm*pointerColorBackground: black
+XTerm*cursorColor: navy
+XTerm*internalBorder: 3
+XTerm*loginShell: true
+XTerm*scrollBar: false
+XTerm*scrollKey: true
+XTerm*saveLines: 1000
+XTerm*multiClickTime: 250
+

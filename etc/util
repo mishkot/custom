@@ -1,0 +1,116 @@
+ssh -p 22222 10.7.53.15
+ssh -p 22222 10.7.53.15
+ssh -p 22222 170.175.224.36
+
+
+/etc/motd - message of the day
+
+# to connect palm to VMWARE
+> lsmod
+root@lat 338=> rmmod visor
+root@lat 339=> rmmod usbserial
+
+# EVERY KERNEL:
+mv /lib/modules/$(uname -r)/kernel/drivers/usb/serial/visor.ko /lib/modules/$(uname -r)/kernel/drivers/usb/serial/visor.ko.disabled
+mv /lib/modules/$(uname -r)/kernel/drivers/usb/serial/usbserial.ko /lib/modules/$(uname -r)/kernel/drivers/usb/serial/usbserial.ko.disabled
+
+
+# %s/^{$/{ \/\/{{{/
+# %s/^}$/} \/\/}}}/
+
+// $Header$ --MK
+#pragma once
+#pragma ident "$RCSfile$ $Revision$"
+
+wireshark
+
+netstat -anp
+
+tcpdump {{{
+sudo  tcpdump -n port 7010      # rbcrtp
+
+to dump:
+tcpdump -n -s 65535 -w - port 12345 | gzip > dump.gz
+
+to read:
+zcat dump.gz | tcpdump -n -r -
+(it will complain at the end about a incomplete file, or something
+because the file is truncated, should not cause problems)
+
+
+There is a really good tool for analyzing the packets:
+
+install wireshark:
+yum install wireshark
+yum install wireshark-gnome
+
+but the data file has to be local to you.
+
+}}}
+
+locate xxxx
+
+Setting and Changing Time {{{
+    date; /sbin/hwclock --show  # compare system and HW clocks
+    date +\%T.\%N; /sbin/hwclock --show  # compare system and HW clocks
+
+    /sbin/hwclock --hctosys     # set system time to HW time
+
+    /sbin/hwclock --systohc     # set HW time to system time
+
+    hwclock --set --date="9/22/96 16:45:05"
+
+    hwclock --adjust            # adjust to the previously calculated drift (see man)
+
+    /usr/sbin/ntpdate -q 10.7.255.135  # query, -d - debug
+
+    system-config-date          # GUI - can be invoked from the menu
+}}}
+
+Disabling/enabling the firewall {{{
+/etc/rc.d/init.d/iptables stop
+/etc/rc.d/init.d/iptables start
+
+/etc/sysconfig/iptables
+# MK - orderclerk
+-A RH-Firewall-1-INPUT -p tcp -m tcp --dport 5301 -j ACCEPT
+
+/sbin/iptables -A INPUT -p tcp --sport 5301 -j ACCEPT
+/sbin/iptables -A INPUT -p tcp --sport 22222 -j ACCEPT
+
+# neither seems to work
+}}}
+
+ps {{{
+ps -A -opid,user,stime,%cpu,cputime,rss,vsz,command | egrep "(l log)|(COMMAND)"
+
+sz         SZ       size in physical pages of the core image of the process.
+                    This includes text, data, and stack space. Device
+                    mappings are currently excluded; this is subject to
+                    change. See vsz and rss.
+
+
+mike@minia 514=> ps -L
+%cpu %mem
+acflag acflg blocked caught command cpu cputime f flags gid ignored inblk inblock jobc ktrace ktracep lim login logname lstart majflt minflt msgrcv msgsnd ni nice nivcsw
+nsignals nsigs nswap nvcsw nwchan oublk oublock p_ru paddr pagein pcpu pending pgid pid pmem ppid pri pstime putime re rgid rss rssize rsz ruid ruser sess sig sigmask sl start stat state stime svgid svuid tdev time tpgid tsess tsiz tt tty ucomm uid upr user usrpri utime vsize vsz
+wchan xstat
+
+}}}
+
+
+tar xzvf file.tgz
+
+screen
+next ^@ ^N sp n
+prev        ^H ^P p ^?
+title       A
+new screen      ^C c
+windows     ^W w
+
+0   select 0
+
+
+PC tools belarc, everest (better one at recognizing hw)
+Schonfeld - use SUSE linux
+ethtool, ktrace, dtrace

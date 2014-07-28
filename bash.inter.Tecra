@@ -1,0 +1,32 @@
+# custom setup for interactive bash shell to set host-specific environment
+# this script is supposed to be sourced from .bashrc if interactive 
+
+#. /etc/bash.bashrc
+
+ulimit -c 512000    # core file half a gig
+
+# VS build environment
+export LOCAL_CODE=$HOME/code        # where code root resides
+#export SYSTEM_CODE=$HOME/code       # should be obsoleted
+
+export VS_BUILD_CONFIG=tecra        # for use of make building VS code
+
+export OMS_HOME=$HOME/oms           # VS oms runtime
+export MKT_DATA_DIR=$HOME/mkt       # VS mkt runtime
+export VS_MKT_HOME=$HOME/mkt        # VS mkt runtime - obsolete?
+export VS_LIBS=$HOME/vslib
+
+export LD_LIBRARY_PATH=$VS_LIBS:$OMS_HOME/libs:$MKT_DATA_DIR/libs
+
+export PYTHONPATH=$HOME/.python:$VS_LIBS/python     # python packages
+
+export GPG_TTY=`tty`                # see ~/.custom/gnupg.vim
+
+alias mocha='ssh -Y versant@mocha'
+alias fmocha='sftp versant@mocha'
+alias calv='ssh -Y versant@calvados'
+alias fcalv='sftp versant@calvados'
+alias shiraz='ssh -Y versant@shiraz'
+alias fshiraz='sftp versant@shiraz'
+alias lag='ssh -Y versant@lag'
+alias flag='sftp versant@lag'

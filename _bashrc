@@ -1,0 +1,18 @@
+# ln -s .custom/_bashrc ~/.bashrc
+# this file ~/.bashrc is invoked automatically by a no-login shell
+# it is also invoked explicitely from ~/.bash_profile if login shell
+# Sun Jan  8 23:01:39 EST 2012
+
+export BASH_LEVEL=$((BASH_LEVEL+1))     # note - counts sourcing as levels
+if [ $BASH_LEVEL = 1 ]; then
+    export HOSTNAME=$(hostname)
+    export HNAME=${HOSTNAME%%.*}        # short host name
+    export SNAME=$(uname)               # kernel/os name
+
+    export PATH=.:/opt/local/bin:/usr/local/bin:$PATH:/sbin:/usr/sbin
+fi
+
+if [ -n "$PS1" ]; then # if interactive shell
+    [ -f $HOME/.custom/bash.inter ] && . $HOME/.custom/bash.inter
+    [ -f $HOME/.custom/bash.inter.$HNAME ] && . $HOME/.custom/bash.inter.$HNAME
+fi

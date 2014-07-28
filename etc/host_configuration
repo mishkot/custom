@@ -1,0 +1,125 @@
+ci -i -t-'Create' *
+
+netstat -anp
+
+
+Configuring Laptop networking {{{
+ RBC static address: 10.7.53.14
+ RBC subnet mask 255.255.255.0
+ Router 10.7.53.1
+ DNS Servers 10.7.2.12, 10.7.3.12
+
+ Files involved:
+
+ /etc/sysconfig/network-scripts/ifcfg-eth0 {{{
+    original {{{
+root@localhost 256=> cat /etc/sysconfig/network-scripts/ifcfg-eth0
+# Broadcom Corporation NetXtreme BCM5752 Gigabit Ethernet PCI Express
+DEVICE=eth0
+BOOTPROTO=dhcp
+HWADDR=00:15:C5:C8:3C:C8
+ONBOOT=yes
+root@localhost 257=>
+    }}}
+    need for static, according to Igor: {{{
+BOOTPROTO=static
+BROADCAST=10.7.53.255
+IPADDR=10.7.53.14
+NETMASK=255.255.255.0
+NETWORK=10.7.53.0
+    }}}
+ }}}
+
+ /etc/resolve.conf {{{
+    Originally empty.
+    needs, according to Igor: {{{
+DOMAIN localdomain
+nameserver 10.7.2.12
+nameserver 10.7.3.12
+    }}}
+ }}}
+
+ /etc/sysconfig/network {{{
+    original {{{
+root@localhost 262=> cat /etc/sysconfig/network
+NETWORKING=yes
+NETWORKING_IPV6=yes
+HOSTNAME=localhost.localdomain
+root@localhost 263=>
+    }}}
+ }}}
+
+ /etc/hosts {{{
+    original {{{
+mike@localhost 1019=> cat /etc/hosts
+# Do not remove the following line, or various programs
+# that require network functionality will fail.
+127.0.0.1               localhost.localdomain localhost
+::1             localhost.localdomain localhost
+mike@localhost 1020=>
+    }}}
+    added, on Igor's advice {{{
+        10.7.53.14	localhost.localdomain
+        10.7.53.1	local_rtr
+
+        #::1		localhost.localdomain localhost
+    }}}
+
+ }}}
+
+}}}
+
+
+ORIGINAL:
+
+Static address: 10.7.53.14
+> /sbin/ifconfig -a
+
+> /sbin/ifconfig eth0 10.7.53.14 netmask 255.255.255.0 up
+
+> ping 10.7.53.1
+> ping 10.7.53.10
+
+
+> netstat -rn
+> /sbin/route add default 10.7.53.14 gw 10.7.53.1
+!!! failed to specify default route!
+
+
+pc: 10.7.53.10
+
+man hosts
+
+HOSTNAME:
+> hostname xxx
+/etc/hosts
+
+
+/etc/sysconfig/network : add:
+GATEWAY=10.7.53.1
+
+
+#?
+TYPE=Ethernet
+
+
+
+
+> nslookup
+
+
+
+Return into DHCP:
+/etc/rc.d/init.d/network restart
+
+
+################################################################################
+# SU
+su -
+
+################################################################################
+* To kill X11 type Alt-Ctl-Backspace
+
+################################################################################
+* Within X11, use Ctl-Alt F1-F6  to go to virtiual text only terminals (ie kernel)
+* within the virtual terminal use Alt-F7 to go back to X11

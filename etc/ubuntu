@@ -1,0 +1,4 @@
+ls -la /dev/disk/by-id/usb-*
+dd if=ubuntu-9.04-netbook-remix-i386.img of=/dev/sdb
+
+dd if=ubuntu-9.04-netbook-remix-i386.img of=/dev/sdb bs=1M
