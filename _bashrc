@@ -9,7 +9,7 @@ if [ $BASH_LEVEL = 1 ]; then
     export HNAME=${HOSTNAME%%.*}        # short host name
     export SNAME=$(uname)               # kernel/os name
 
-    export PATH=.:/opt/local/bin:/usr/local/bin:$PATH:/sbin:/usr/sbin
+    PATH=/usr/local/bin:$PATH:/sbin:/usr/sbin
 fi
 
 if [ -n "$PS1" ]; then # if interactive shell
